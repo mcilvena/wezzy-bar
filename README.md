@@ -2,8 +2,6 @@
 
 A minimal, performant tab bar plugin for WezTerm focused on keyboard users. Features clickable tab numbers, customizable clock, and seamless theme integration.
 
-![wezzy-bar demo](demo.png)
-
 ## Features
 
 - **Minimal tab design** - Just numbers (`1`, `2`, `3`) for maximum screen space efficiency
