@@ -23,8 +23,20 @@ function M.update_status(window, pane)
   local tabs = mux_window:tabs()
   local active_tab = window:active_tab()
   
+  -- Check if clock component is enabled
+  local has_clock = false
+  for _, zone in pairs(zone_config) do
+    for _, component_name in ipairs(zone or {}) do
+      if component_name == 'clock' then
+        has_clock = true
+        break
+      end
+    end
+    if has_clock then break end
+  end
+  
   -- Only update if significant time has passed or tab state changed
-  local min_update_interval = 5 -- seconds
+  local min_update_interval = has_clock and 30 or 5 -- 30 seconds if clock is present, 5 if not
   local tab_state_changed = (
     #tabs ~= status_cache.last_tab_count or 
     (active_tab and active_tab:tab_id() ~= status_cache.last_active_tab)
