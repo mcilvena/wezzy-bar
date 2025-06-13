@@ -16,16 +16,6 @@ A minimal, performant tab bar plugin for WezTerm focused on keyboard users. Feat
 
 ## Quick Setup
 
-### 1. Install
-
-Clone the repository to your local machine:
-
-```bash
-git clone https://github.com/yourusername/wezzy-bar.git ~/code/wezzy-bar
-```
-
-### 2. Basic Configuration
-
 Add to your `~/.wezterm.lua`:
 
 ```lua
@@ -36,9 +26,7 @@ local config = wezterm.config_builder()
 config.color_scheme = 'Catppuccin Mocha'
 
 -- Add wezzy-bar
-local home = wezterm.home_dir
-package.path = package.path .. ';' .. home .. '/code/wezzy-bar/?.lua'
-local wezzy_bar = require 'wezzy-bar'
+local wezzy_bar = wezterm.plugin.require 'https://github.com/mcilvena/wezzy-bar'
 
 wezzy_bar.apply_to_config(config, {
   position = 'bottom',
@@ -51,7 +39,7 @@ wezzy_bar.apply_to_config(config, {
 return config
 ```
 
-### 3. Restart WezTerm
+### Restart WezTerm
 
 That's it! You should now see minimal tab numbers on the left and a clock on the right.
 
@@ -105,30 +93,22 @@ wezzy-bar automatically adapts to your color scheme:
 
 ## Platform Support
 
-### Windows
-Use absolute paths in your config:
-```lua
-package.path = package.path .. ';C:/Users/yourusername/code/wezzy-bar/?.lua'
-```
-
-### macOS/Linux
-Use the home directory approach:
-```lua
-local home = wezterm.home_dir
-package.path = package.path .. ';' .. home .. '/code/wezzy-bar/?.lua'
-```
-
-### WSL
-Works great! Use Unix-style paths as shown in the basic setup.
+Works on all platforms supported by WezTerm (Windows, macOS, Linux, WSL). The plugin installation is handled automatically by WezTerm.
 
 ## Troubleshooting
 
-### Plugin Not Found
-Make sure the path is correct:
+### Plugin Not Loading
+If the plugin fails to load:
 ```lua
--- Debug: Check if file exists
-local home = wezterm.home_dir
-wezterm.log_info('Plugin path: ' .. home .. '/code/wezzy-bar/wezzy-bar.lua')
+-- Debug: List loaded plugins
+for _, plugin in ipairs(wezterm.plugin.list()) do
+  wezterm.log_info('Plugin: ' .. plugin.url)
+end
+```
+
+You can also try updating plugins:
+```lua
+wezterm.plugin.update_all()
 ```
 
 ### Tabs Not Clickable
