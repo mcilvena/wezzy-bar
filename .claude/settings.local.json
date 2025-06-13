@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir:*)",
+      "WebFetch(domain:wezfurlong.org)",
+      "WebFetch(domain:wezterm.org)"
+    ],
+    "deny": []
+  }
+}
