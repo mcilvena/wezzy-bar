@@ -17,7 +17,7 @@ local default_config = {
     tab_bar_background = nil, -- nil = use theme base color, or set custom color like '#000000'
   },
   wezterm_config_overrides = {
-    show_tabs_in_tab_bar = true,
+    show_tabs_in_tab_bar = false,
     show_new_tab_button_in_tab_bar = false,
     use_fancy_tab_bar = false,
   }

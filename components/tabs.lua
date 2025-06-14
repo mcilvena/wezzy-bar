@@ -1,3 +1,4 @@
+local wezterm = require 'wezterm'
 local base = require 'components.base'
 local theme = require 'core.theme'
 
@@ -12,7 +13,7 @@ function M.new()
     local result = {}
     
     for i, tab in ipairs(context.tabs) do
-      local is_active = tab.is_active
+      local is_active = context.active_tab and tab:tab_id() == context.active_tab:tab_id()
       local bg_color = is_active and colors.active_tab.bg_color or colors.inactive_tab.bg_color
       local fg_color = is_active and colors.active_tab.fg_color or colors.inactive_tab.fg_color
       
