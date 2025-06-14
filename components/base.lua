@@ -3,6 +3,7 @@ local M = {}
 function M.new(component_type)
   local component = {
     type = component_type,
+    name = component_type,
     config = {},
   }
 

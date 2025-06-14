@@ -58,24 +58,9 @@ function M.update_status(window, pane)
     return
   end
   
-  -- Filter out tabs from status bar zones since they're handled by format-tab-title
-  local filtered_left = {}
-  local filtered_right = {}
-  
-  for _, component_name in ipairs(zone_config.left or {}) do
-    if component_name ~= 'tabs' then
-      table.insert(filtered_left, component_name)
-    end
-  end
-  
-  for _, component_name in ipairs(zone_config.right or {}) do
-    if component_name ~= 'tabs' then
-      table.insert(filtered_right, component_name)
-    end
-  end
-  
-  local left_components = M.create_zone_components(filtered_left)
-  local right_components = M.create_zone_components(filtered_right)
+  -- Create components directly from zone configuration
+  local left_components = M.create_zone_components(zone_config.left or {})
+  local right_components = M.create_zone_components(zone_config.right or {})
   
   local context = {
     window = window,
