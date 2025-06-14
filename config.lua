@@ -1,13 +1,13 @@
+local wezterm = require 'wezterm'
 local M = {}
 
 local default_config = {
   position = 'bottom', -- 'top' or 'bottom'
   zones = {
-    left = { 'tabs' },
+    left = {},
     right = { 'clock' }
   },
   components = {
-    tabs = {},
     clock = {
       format = '%l:%M %p',  -- No leading zero for hour (9:01 PM vs 09:01 PM)
       update_interval = 60000,
@@ -17,7 +17,7 @@ local default_config = {
     tab_bar_background = nil, -- nil = use theme base color, or set custom color like '#000000'
   },
   wezterm_config_overrides = {
-    show_tabs_in_tab_bar = false,
+    show_tabs_in_tab_bar = true,
     show_new_tab_button_in_tab_bar = false,
     use_fancy_tab_bar = false,
   }
@@ -58,8 +58,9 @@ function M.apply_wezterm_overrides(wezterm_config)
     wezterm_config.tab_bar_at_bottom = true
   end
   
-  -- Enable tab bar for clickable tabs
+  -- Always enable tab bar with clickable tabs
   wezterm_config.enable_tab_bar = true
+  wezterm_config.show_tabs_in_tab_bar = true
   
   -- Set status bar background color if configured
   if current_config.theme and current_config.theme.tab_bar_background then

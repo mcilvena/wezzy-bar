@@ -90,39 +90,19 @@ function M.create_zone_components(component_names)
   for _, component_name in ipairs(component_names or {}) do
     local component_config = plugin_config.components[component_name] or {}
     local component = components.create_component(component_name, component_config)
-    table.insert(zone_components, component)
+    if component then  -- Only add non-nil components
+      table.insert(zone_components, component)
+    end
   end
   
   return zone_components
 end
 
--- Cache for tab component check
-local tab_component_enabled = nil
-
 function M.format_tab_title(tab, tabs, panes, wezterm_config, hover, max_width)
-  -- Cache the tabs component check since it doesn't change often
-  if tab_component_enabled == nil then
-    local plugin_config = config.get()
-    tab_component_enabled = false
-    for _, zone in pairs(plugin_config.zones or {}) do
-      for _, component_name in ipairs(zone or {}) do
-        if component_name == 'tabs' then
-          tab_component_enabled = true
-          break
-        end
-      end
-      if tab_component_enabled then break end
-    end
-  end
-  
-  if not tab_component_enabled then
-    return nil -- Let WezTerm use default formatting
-  end
-  
   local theme = require 'core.theme'
   local colors = theme.get_tab_colors()
   
-  -- Format the tab with just the tab number
+  -- Always format tabs for the native clickable tab bar
   local bg_color = tab.is_active and colors.active_tab.bg_color or colors.inactive_tab.bg_color
   local fg_color = tab.is_active and colors.active_tab.fg_color or colors.inactive_tab.fg_color
   
@@ -139,7 +119,6 @@ function M.reset_cache()
   status_cache.last_update = 0
   status_cache.last_tab_count = 0
   status_cache.last_active_tab = nil
-  tab_component_enabled = nil
 end
 
 return M

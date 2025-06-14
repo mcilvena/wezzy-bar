@@ -21,6 +21,7 @@ function M.apply(wezterm_module)
     return renderer.format_tab_title(tab, tabs, panes, config, hover, max_width)
   end)
   
+  
   M.setup_key_bindings(wezterm_module)
   
   return M
@@ -91,5 +92,6 @@ function M.setup_key_bindings(wezterm_module)
     },
   }
 end
+
 
 return M

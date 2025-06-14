@@ -4,13 +4,13 @@ A minimal, performant tab bar plugin for WezTerm focused on keyboard users. Feat
 
 ## Features
 
+- **Always clickable tabs** - Full mouse interaction for tab switching using WezTerm's native tab bar
 - **Minimal tab design** - Just numbers (`1`, `2`, `3`) for maximum screen space efficiency
-- **Clickable tabs** - Full mouse interaction for tab switching  
 - **Theme integration** - Automatically adapts to your color scheme (Catppuccin, etc.)
-- **Configurable background** - Set custom colors or use theme defaults
-- **Clean clock** - Customizable time format without visual clutter
+- **Configurable status bar** - Clean clock display without visual clutter
 - **High performance** - Smart caching and optimized rendering
 - **Keyboard-first** - Designed for users who prefer keyboard shortcuts
+- **Clean UI** - No visual controls for opening/closing tabs
 
 ## Quick Setup
 
@@ -29,8 +29,8 @@ local wezzy_bar = wezterm.plugin.require 'https://github.com/mcilvena/wezzy-bar'
 wezzy_bar.apply_to_config(config, {
   position = 'bottom',
   zones = {
-    left = { 'tabs' },
-    right = { 'clock' }
+    left = {},              -- Empty for clean look
+    right = { 'clock' }     -- Clock on right
   }
 })
 
@@ -39,7 +39,7 @@ return config
 
 ### Restart WezTerm
 
-That's it! You should now see minimal tab numbers on the left and a clock on the right.
+That's it! You should now see minimal clickable tab numbers and a clock on the right.
 
 ## Configuration
 
@@ -49,49 +49,96 @@ That's it! You should now see minimal tab numbers on the left and a clock on the
 wezzy_bar.apply_to_config(config, {
   position = 'bottom',  -- 'top' or 'bottom'
   zones = {
-    left = { 'tabs' },
-    right = { 'clock' }
+    left = {},              -- No status bar components on left
+    right = { 'clock' }     -- Show clock on right
   },
   components = {
-    tabs = {},  -- Minimal configuration
     clock = {
       format = '%l:%M %p',        -- 9:01 PM (default)
       -- format = '%H:%M',        -- 21:01 (24-hour)
-      -- format = '%a %l:%M %p',  -- Mon 9:01 PM
+      -- format = '%H:%M:%S',     -- 21:01:30 (with seconds)
       update_interval = 60000,    -- Update every minute
     }
   },
   theme = {
     tab_bar_background = nil,     -- Use theme default
-    -- tab_bar_background = '#000000',  -- Custom black
-    -- tab_bar_background = '#1a1a1a',  -- Custom dark gray
+    -- tab_bar_background = '#1e1e2e',  -- Custom color
   }
 })
 ```
+
+### Position Options
+
+- **`bottom`** (default) - Status bar at bottom of terminal
+- **`top`** - Status bar at top of terminal
+
+### Zone Configuration
+
+Configure what appears in each zone:
+
+```lua
+zones = {
+  left = {},              -- Available: [] (empty for clean look)
+  right = { 'clock' }     -- Available: ['clock'] or [] (empty)
+}
+```
+
+**Note:** Tabs are always displayed in WezTerm's native tab bar and are always clickable. They cannot be placed in status bar zones.
+
+### Component Configuration
+
+#### Clock Component
+
+```lua
+components = {
+  clock = {
+    format = '%l:%M %p',          -- Time format
+    update_interval = 60000,      -- Update frequency in milliseconds
+  }
+}
+```
+
+**Clock format options:**
+- `%l:%M %p` - 9:01 PM (12-hour, no leading zero)
+- `%I:%M %p` - 09:01 PM (12-hour, with leading zero)
+- `%H:%M` - 21:01 (24-hour)
+- `%H:%M:%S` - 21:01:30 (24-hour with seconds)
+- `%a %l:%M %p` - Mon 9:01 PM (with day)
 
 ### Theme Integration
 
 wezzy-bar automatically adapts to your color scheme:
 
-- **Active tabs** use your theme's accent color (perfect for Catppuccin!)
-- **Inactive tabs** blend with the background
+- **Active tabs** use your theme's accent color
+- **Inactive tabs** blend with the background  
 - **Clock** inherits theme colors
-- **Background** uses theme base color (or custom override)
+- **Background** uses theme base color or custom override
 
-### Position Options
+```lua
+theme = {
+  tab_bar_background = nil,        -- Use theme default (recommended)
+  -- tab_bar_background = '#1e1e2e', -- Custom background color
+}
+```
 
-**Bottom (recommended):**
-- Uses WezTerm's status bar area
-- Guaranteed clickable functionality
-- Works with all themes
+## Tab Behavior
 
-**Top:**
-- Integrates with native tab bar
-- More traditional tab bar placement
+- **Always clickable** - Tabs appear in WezTerm's native tab bar
+- **Custom styling** - Numbered tabs (1, 2, 3, etc.) with theme colors
+- **No new tab button** - Clean UI without visual controls
+- **Keyboard shortcuts work** - Ctrl+1, Ctrl+2, etc. still function
+- **Mouse wheel support** - Scroll to switch tabs (if enabled in WezTerm)
 
 ## Platform Support
 
-Works on all platforms supported by WezTerm (Windows, macOS, Linux, WSL). The plugin installation is handled automatically by WezTerm.
+Works on all platforms supported by WezTerm:
+- Windows 11
+- WSL/Windows
+- macOS
+- Linux
+- Arch Linux
+
+The plugin installation is handled automatically by WezTerm.
 
 ## Troubleshooting
 
@@ -110,9 +157,10 @@ wezterm.plugin.update_all()
 ```
 
 ### Tabs Not Clickable
-- Ensure `position = 'bottom'` (most reliable)
+This should not happen with the current version as tabs are always in WezTerm's native tab bar. If experiencing issues:
+- Restart WezTerm completely
 - Check that no other tab bar plugins are conflicting
-- Verify WezTerm version supports the features
+- Verify WezTerm version is recent
 
 ### Colors Look Wrong
 - Confirm your `color_scheme` is set before applying wezzy-bar
@@ -130,14 +178,14 @@ The plugin includes smart caching, but if you experience slowness:
 ```
 wezzy-bar/
 ├── wezzy-bar.lua          # Main plugin entry point
-├── init.lua               # Legacy entry point
+├── init.lua               # Legacy entry point  
 ├── config.lua             # Configuration management
 ├── core/
 │   ├── renderer.lua       # Tab and status rendering
 │   ├── theme.lua          # Color scheme integration
-│   └── zones.lua          # Layout management
+│   ├── zones.lua          # Layout management
+│   └── utils.lua          # Utility functions
 ├── components/
-│   ├── tabs.lua           # Tab number component
 │   ├── clock.lua          # Clock component
 │   └── base.lua           # Base component class
 └── dev/                   # Development tools
@@ -158,8 +206,8 @@ wezzy-bar/
 # Use the development launcher
 ./dev/start-dev-wsl.sh
 
-# Or configure manually
-config.color_scheme = 'Tokyo Night'  # Test theme
+# Or configure manually in wezterm.lua
+local wezzy_bar = require '/path/to/wezzy-bar'
 ```
 
 ## License

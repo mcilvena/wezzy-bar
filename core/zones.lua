@@ -28,28 +28,25 @@ function M.render_status_zones(left_components, right_components, context)
 end
 
 function M.split_status_for_display(status_elements, context)
-  local left_status = ''
-  local right_status = ''
+  local wezterm = require 'wezterm'
+  local left_elements = {}
+  local right_elements = {}
   local is_right_section = false
   
   for _, element in ipairs(status_elements) do
     if element.Text and string.match(element.Text, '^%s+$') and string.len(element.Text) > 2 then
       is_right_section = true
-    elseif element.Text then
+    else
       if is_right_section then
-        right_status = right_status .. element.Text
+        table.insert(right_elements, element)
       else
-        left_status = left_status .. element.Text
-      end
-    elseif element.Foreground or element.Background then
-      local attr_str = M.format_attribute(element)
-      if is_right_section then
-        right_status = right_status .. attr_str
-      else
-        left_status = left_status .. attr_str
+        table.insert(left_elements, element)
       end
     end
   end
+  
+  local left_status = wezterm.format(left_elements)
+  local right_status = wezterm.format(right_elements)
   
   return left_status, right_status
 end

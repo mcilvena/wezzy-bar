@@ -23,6 +23,7 @@ function M.apply_to_config(wezterm_config, opts)
     return renderer.format_tab_title(tab, tabs, panes, config, hover, max_width)
   end)
   
+  
   return wezterm_config
 end
 
