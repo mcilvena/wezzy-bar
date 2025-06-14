@@ -2,6 +2,7 @@ local wezterm = require 'wezterm'
 
 local M = {}
 
+
 function M.get_colors()
   local builtin_schemes = wezterm.color.get_builtin_schemes()
   local wezterm_config = wezterm.config_builder and wezterm.config_builder() or {}
@@ -29,6 +30,15 @@ function M.get_colors()
     }
   end
   
+  -- Use existing theme colors for subtle text
+  -- Many themes have subtle colors in their ansi palette:
+  -- - ansi[8] is typically bright black / dark gray (good for subtle text)
+  -- - ansi[7] is typically light gray
+  -- - Some themes define specific subtle colors in their extended palette
+  local subtle_fg = scheme.ansi and scheme.ansi[8] or  -- Bright black (subtle)
+                    scheme.ansi and scheme.ansi[7] or  -- Light gray
+                    scheme.foreground                  -- Fallback to normal foreground
+  
   return {
     foreground = scheme.foreground,
     background = scheme.background,
@@ -38,6 +48,7 @@ function M.get_colors()
     selection_fg = scheme.selection_fg,
     ansi = scheme.ansi,
     brights = scheme.brights,
+    subtle_foreground = subtle_fg,
     tab_bar = scheme.tab_bar or {
       background = plugin_config.theme and plugin_config.theme.tab_bar_background or scheme.background,
       active_tab = {

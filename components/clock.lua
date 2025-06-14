@@ -14,7 +14,7 @@ function M.new()
     local time_str = os.date(format)
 
     return {
-      { Foreground = { Color = colors.foreground } },
+      { Foreground = { Color = colors.subtle_foreground } },
       { Text = " " .. time_str .. " " },
     }
   end
