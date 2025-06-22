@@ -4,14 +4,8 @@ local M = {}
 local default_config = {
   position = "bottom", -- 'top' or 'bottom'
   zones = {
-    left = {},
+    left = { "tabs" },
     right = { "clock" },
-  },
-  components = {
-    clock = {
-      format = "%H:%M",
-      update_interval = 10000,
-    },
   },
   theme = {
     tab_bar_background = nil, -- nil = use theme base color, or set custom color like '#000000'
